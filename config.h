@@ -4,16 +4,17 @@
 #include <string>
 #include <vector>
 #include <Eigen/Dense>
+#include <cstdlib>
 
 class Config {
 public:
-	double getnx() { return nx; }
-	double getny() { return ny; }
-	double getnz() { return nz; }
+	int getnx() { return nx; }
+	int getny() { return ny; }
+	int getnz() { return nz; }
 
-	void setnx(double _nx) { this->nx = _nx; }
-	void setny(double _ny) { this->ny = _ny; }
-	void setnz(double _nz) { this->nz = _nz; }
+	void setnx(int _nx) { this->nx = _nx; }
+	void setny(int _ny) { this->ny = _ny; }
+	void setnz(int _nz) { this->nz = _nz; }
 
 
 	//double get() { return; }
@@ -28,6 +29,8 @@ public:
 	double getPhi() { return phi; }
 	double getPsi() { return psi; }
 
+	std::string getSaveString() { return saveString; }
+
 	//void set(double _) { this-> = _; }
 	void setWallXPosition(double _wallXPosition) { this->wallXPosition = _wallXPosition; }
 	void setdzdy(double _dzdy) { this->dzdy = _dzdy; }
@@ -40,13 +43,18 @@ public:
 	void setPhi(double _phi) { this->phi = _phi; }
 	void setPsi(double _psi) { this->psi = _psi; }
 
+	void setCellName(std::string _setcellName) { this->cellName = _setcellName; }
+	void setCellType(std::string _setcellType) { this->cellType = _setcellType; }
+	void setCellCentering(std::string _cellCentering) { this->cellCentering = _cellCentering; }
+	
+	void setManualConfig();
+	void setFullConfig(double _wallXPosition, double _dzdy, double _wallLength, double _lambda, double _A, double _k, double _omega, double _theta, double _phi, double _psi, std::string _cellCentering, std::string _cellName, std::string _cellType);
+
 	std::string getCellName() { return cellName; }
 	std::string getCellType() { return cellType; }
 	std::string getCellCentering() { return cellCentering; }
 
-	void setCellName(double _setcellName) { this->cellName = _setcellName; }
-	void setCellType(double _setcellType) { this->cellType = _setcellType; }
-	void setCellCentering(double _cellCentering) { this->cellCentering = _cellCentering; }
+	void setSaveString(std::string _saveString) { this->saveString = _saveString; }
 
 private:
 	int nx = 1;
@@ -54,19 +62,23 @@ private:
 	int nz = 1;
 
 	double wallXPosition = 0.01;// wall at x = wallXPos
-	double dzdy = 0.0005;// dzdy->step size for wall spacing
-	double wallLength = .2; // wall is wallLen x wallLen meters
+	double dzdy = 0.0001;// dzdy->step size for wall spacing
+	double wallLength = .1; // wall is wallLen x wallLen meters
 	double lambda = 1e-9; // wavelength (meters)
-	double A;  // Amplitude (arbitrary units)
-	double k; // wavenumber (1/m)
+	double A = 1;  // Amplitude (arbitrary units)
+	double k = 1 ; // wavenumber (1/m)
 	double omega = 0; //
 	double theta = 0;
 	double phi = 0;
 	double psi = 0;
 
+
+	// Defaults 
 	std::string cellName = "salt";
 	std::string cellType = "";
 	std::string cellCentering = "face-centered";
+	std::string saveString = "C:\\Users\\Michael\\Documents\\Programming\\laueDiffractionResults\\EigenResultsFaceHighRes.csv";
+
 };
 
 #endif 

@@ -105,7 +105,7 @@ void propogateWave(double lambda, const Eigen::VectorXd& normsToScreen, const Ei
 	waveFunction.col(1) += sinResult;
 }
 
-void exportData(Eigen::MatrixXd waveFunction) {
+void exportData(Eigen::MatrixXd waveFunction, std::string saveString) {
 	std::vector<std::vector<double>> waveFunctionVectors = {};
 	for (int i = 0; i < waveFunction.rows(); i++) {
 		Eigen::VectorXd waveFunctionAtScreenPosition(5);
@@ -113,8 +113,8 @@ void exportData(Eigen::MatrixXd waveFunction) {
 		std::vector<double> finalWaveFunctionVector(waveFunctionAtScreenPosition.data(), waveFunctionAtScreenPosition.data() + waveFunctionAtScreenPosition.size());
 		waveFunctionVectors.push_back(finalWaveFunctionVector);
 	}
-	
-	std::ofstream out("C:\\Users\\Michael\\Documents\\Programming\\laueDiffractionResults\\EigenResults.csv");
+	// "C:\\Users\\Michael\\Documents\\Programming\\laueDiffractionResults\\EigenResults.csv"
+	std::ofstream out(saveString);
 	for (auto& row : waveFunctionVectors) {
 		for (auto col : row)
 			out << col << ',';
@@ -122,13 +122,25 @@ void exportData(Eigen::MatrixXd waveFunction) {
 	}
 }
 
+//int main() {
+  int main(int argc, char* argv[]) {
 
-int main() {
-	
 	auto timeStart = std::chrono::high_resolution_clock::now();
 
 	// Configs are now defined within config.cpp
 	Config config;
+	if (argc == 11) { config.setFullConfig(std::atof(argv[1]), std::atof(argv[2]), std::atof(argv[3]), std::atof(argv[4]), 
+										   std::atof(argv[5]), std::atof(argv[6]), std::atof(argv[7]), std::atof(argv[8]), 
+										   std::atof(argv[9]), std::atof(argv[10]), argv[11], argv[12], argv[13]); }
+	else {
+		std::cout << "A full list of argument is 10 arugments long and follows the order: \n"
+			" [1] double wallXPosition, [2] double dzdy, [3] double wallLength,\n"
+			" [4] double lambda, [5] double A, [6] double k,\n"
+			" [7] double omega, [8] double theta, [9] double phi,\n" 
+			" [10] double psi, [11] string cellName, [12] string cellType "
+			" [13] string cellCentering "<< std::endl;
+		config.setManualConfig();
+	}
 	int wallDivisions = static_cast<int>(std::floor(config.getWallLength() / config.getdzdy()));
 
 	// Get properties of individual crystal with the proper ortientation
@@ -136,19 +148,21 @@ int main() {
 	crystal.setCellName(config.getCellName());
 	crystal.setCellType(config.getCellName(), config.getCellCentering());
 	crystal.setCellProperties(config.getCellName(), config.getCellCentering(), crystal.getCellType());
+
 	std::cout << "Using cellName = " << config.getCellName() << " || Using cellType = " << crystal.getCellType() << " || Using cellCentering = " << config.getCellCentering() << std::endl;
 	Eigen::MatrixXd cellStructure = getCellStructure(crystal.getCellType(), config.getCellCentering(), crystal.getAxialDistanceA(), crystal.getAxialDistanceB(), crystal.getAxialDistanceC(),
 													crystal.getAxialAngleAlpha(), crystal.getAxialAngleBeta(), crystal.getAxialAngleGamma());
+	
+	
 	// Build up the lattice and screen
 	Eigen::MatrixXd fullLattice = buildLattice(config.getnx(), config.getny(), config.getnz(), crystal.getAxialDistanceA(), crystal.getAxialDistanceB(), crystal.getAxialDistanceC(), cellStructure);
 	Eigen::MatrixXd rotatedLattice = rotateLattice(fullLattice, config.getPhi(), config.getTheta(), config.getPsi());
 	Eigen::MatrixXd wave = buildWave(getScreen(wallDivisions, config.getWallXPosition(),  config.getdzdy(),  config.getWallLength()), wallDivisions);
+	
 	auto timeToPropogation = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - timeStart);
 	std::cout << "Time to propogation loop: " << timeToPropogation.count() << " ms" << std::endl;
 
-	
 	// For each atom, get the contribution from scattering to every screen position. This is the bulk of the calculation 
-	
 	for (int a = 0 ; a < rotatedLattice.rows(); a++) {
 		auto timeFromLoopStart = std::chrono::high_resolution_clock::now();
 		std::cout << "Working on atom number " << a; 
@@ -161,7 +175,7 @@ int main() {
 	std::cout << "Total time:  " << timeToPropogationEnd.count() / 1000. << " s" << std::endl;
 	std::cout << "Time per atom:  ~" << (timeToPropogationEnd.count() - timeToPropogation.count())/ (1000. * static_cast<float>(rotatedLattice.rows())) << " s" << std::endl;
 
-	exportData(wave);
+	exportData(wave, config.getSaveString());
 
 
 	return 0;
