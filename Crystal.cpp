@@ -1,4 +1,5 @@
 #include <Crystal.h>
+#include <config.h>
 #include <cmath>
 #include <fstream>
 #include <vector>
@@ -12,8 +13,18 @@
 std::string validCrystals[2] = { "salt", "graphite" };
 std::string validCenterings[2] = { "primative", "body-centered" };
 
-void Crystal::setCellType(std::string cellName, std::string cellCentering) {
-	this->cellCentering = cellCentering;
+void Crystal::setCellStrings(const Config& config) {
+	Crystal::setCellCentering(config.getCellCentering());
+	Crystal::setCellName(config.getCellName());
+}
+
+
+void Crystal::setCellType(Crystal& crystal) {
+//void Crystal::setCellType(std::string cellName, std::string cellCentering) {
+	
+	const std::string cellCentering = crystal.getCellCentering();
+	const std::string cellName = crystal.getCellName();
+
 	std::string monoclinicArray[1] = {"jadeite"};
 	std::string orthorhombicArray[1] = {"olivine"};
 	std::string tetragonalArray[1] = {"pinnoite"};
@@ -51,8 +62,14 @@ void Crystal::setCellType(std::string cellName, std::string cellCentering) {
 		throw;
 	}
 }
+void Crystal::setCellProperties(Crystal& crystal) {
+//void Crystal::setCellProperties(std::string cellName, std::string cellCentering, std::string cellType) { //https://next-gen.materialsproject.org/materials/mp-22862
+	
+	const std::string cellName = crystal.getCellName();
 
-void Crystal::setCellProperties(std::string cellName, std::string cellCentering, std::string cellType) { //https://next-gen.materialsproject.org/materials/mp-22862
+	const std::string cellType = crystal.getCellType();
+	const std::string cellCentering = crystal.getCellCentering();
+
 	if (cellName == "graphite") { // https://som.web.cmu.edu/structures/S022-C-graphite.html
 
 		Crystal::setAxialDistanceA(2.456e-10);

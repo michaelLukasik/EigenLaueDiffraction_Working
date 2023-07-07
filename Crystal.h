@@ -1,5 +1,7 @@
 #ifndef CRYSTAL_H
 #define CRYSTAL_H
+
+#include <config.h>
 #include <algorithm> // for std::find
 #include <iterator> // for std::begin, std::end
 #include <string>
@@ -11,13 +13,13 @@ public:
 	//Crystal();
 	//virtual ~Crystal();
 
-	double getAxialDistanceA() { return axialDistanceA; }
-	double getAxialDistanceB() { return axialDistanceB; }
-	double getAxialDistanceC() { return axialDistanceC; }
+	const double getAxialDistanceA() const { return axialDistanceA; }
+	const double getAxialDistanceB() const { return axialDistanceB; }
+	const double getAxialDistanceC() const { return axialDistanceC; }
 
-	double getAxialAngleAlpha() { return axialAngleAlpha; }
-	double getAxialAngleBeta() { return axialAngleBeta; }
-	double getAxialAngleGamma() { return axialAngleGamma; }
+	const double getAxialAngleAlpha() const { return axialAngleAlpha; }
+	const double getAxialAngleBeta() const { return axialAngleBeta; }
+	const double getAxialAngleGamma() const { return axialAngleGamma; }
 
 	void setAxialDistanceA(double _axialDistanceA) { this->axialDistanceA = _axialDistanceA;}
 	void setAxialDistanceB(double _axialDistanceB) { this->axialDistanceB = _axialDistanceB; }
@@ -27,20 +29,21 @@ public:
 	void setAxialAngleBeta(double _axialAngleBeta) { this->axialAngleBeta = _axialAngleBeta; }
 	void setAxialAngleGamma(double _axialAngleGamma) { this->axialAngleGamma = _axialAngleGamma; }
 
-
-
-	Eigen::MatrixXd getCellStructure() { return cellStructure; }
-	std::string getCallCentering() { return cellCentering; }
-	std::string getCellName() { return cellName; }
-	std::string getCellType() { return cellType; }
-
-	void setCellStructure(Eigen::MatrixXd _cellStructure) { this->cellStructure = _cellStructure; }
 	void setCellCentering(std::string _cellCentering) { this->cellCentering = _cellCentering; }
 	void setCellName(std::string _cellName) { this->cellName = _cellName; }
-	
+
+
+	const Eigen::MatrixXd getCellStructure() const { return cellStructure; }
+	const std::string getCellCentering() const { return cellCentering; }
+	const std::string getCellName() const { return cellName; }
+	const std::string getCellType() const{ return cellType; }
+
+	void setCellStructure(Eigen::MatrixXd _cellStructure) { this->cellStructure = _cellStructure; }
+
 	// The following are defined in crystal.cpp, requires look up based on inputs
-	void setCellType(std::string _cellName, std::string _cellCentering);
-	void setCellProperties(std::string _cellName, std::string _cellCentering, std::string _cellType);
+	void setCellStrings(const Config& config);
+	void setCellType(Crystal& crystal);
+	void setCellProperties(Crystal& crystal);
 
 
 
