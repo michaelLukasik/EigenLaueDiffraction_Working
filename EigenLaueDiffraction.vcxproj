@@ -130,6 +130,8 @@
     <ClCompile Include="Diffraction.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Michael\source\repos\EigenLaueDiffraction;C:\Users\Michael\Documents\Include\eigen-3.4.0;C:\Users\Michael\Documents\Include\matclpro;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Michael\source\repos\EigenLaueDiffraction;C:\Users\Michael\Documents\Include\eigen-3.4.0;C:\Users\Michael\Documents\Include\matclpro;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpp20</LanguageStandard>
+      <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdcpp20</LanguageStandard>
     </ClCompile>
     <ClCompile Include="Bravais.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Michael\Documents\Include\matplotplusplus-master;C:\Users\Michael\source\repos\EigenLaueDiffraction;C:\Users\Michael\Documents\Include\eigen-3.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

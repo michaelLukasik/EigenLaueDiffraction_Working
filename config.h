@@ -28,6 +28,8 @@ public:
 	const double getTheta() const { return theta; }
 	const double getPhi() const { return phi; }
 	const double getPsi() const { return psi; }
+	const int getl() const { return l; }
+	const double geta() const { return a; } // a in this case refers to the atomic size
 	const int getWallDivisions() const { return wallDivisions; }
 
 	std::string getSaveString() { return saveString; }
@@ -43,6 +45,10 @@ public:
 	void setTheta(double _theta) { this->theta = _theta; }
 	void setPhi(double _phi) { this->phi = _phi; }
 	void setPsi(double _psi) { this->psi = _psi; }
+	void setl(int _l) { this->l = _l; }
+	void seta(double _a) { this->a = _a; }
+
+
 	void setWallDivisions(double _dzdy, double _wallLength) {this->wallDivisions =  static_cast<int>(std::floor(_wallLength / _dzdy));}
 
 	void setCellName(std::string _setcellName) { this->cellName = _setcellName; }
@@ -52,7 +58,7 @@ public:
 	
 	void setSaveString(Config config);
 	void setManualConfig();
-	void setFullConfig(double _wallXPosition, double _dzdy, double _wallLength, double _lambda, double _A, double _k, double _omega, double _theta, double _phi, double _psi, std::string _cellCentering, std::string _cellName, std::string _configTag);
+	void setFullConfig(double _wallXPosition, double _dzdy, double _wallLength, double _lambda, double _A, double _k, double _omega, double _theta, double _phi, double _psi, int _l, double _a, std::string _cellCentering, std::string _cellName, std::string _configTag, int _nx, int _ny, int _nz);
 	
 	const std::string getCellName() const { return cellName; }
 	const std::string getCellType() const { return cellType; }
@@ -69,13 +75,14 @@ private:
 	double wallLength = .1; // wall is wallLen x wallLen meters
 	double lambda = 1e-9; // wavelength (meters)
 	double A = 1;  // Amplitude (arbitrary units)
-	double k = 1 ; // wavenumber (1/m)
+	double k = 6.2832 / 3.e-9; // wavenumber (1/m)
 	double omega = 0; //
 	double theta = 0;
 	double phi = 0;
 	double psi = 0;
 	int wallDivisions; //= static_cast<int>(std::floor(wallLength / dzdy));
-
+	int l = 3; // number of spherical harmonics to include
+	double a = 1.;
 
 	// Defaults 
 	std::string cellName = "salt";
