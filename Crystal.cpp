@@ -82,7 +82,7 @@ void Crystal::setCellProperties(Crystal& crystal) {
 	}
 	else if (cellName == "salt") { // https://next-gen.materialsproject.org/materials/mp-22862
 
-		Crystal::setAxialDistanceA(pow(20, -5));//5.59e-10);
+		Crystal::setAxialDistanceA(5.59e-10);
 		Crystal::setAxialDistanceB(5.59e-10);
 		Crystal::setAxialDistanceC(5.59e-10);
 
