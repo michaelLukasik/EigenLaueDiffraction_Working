@@ -1,15 +1,25 @@
 #include <Bravais.h>
 #include <math.h>
+#include <config.h>
+#include <Crystal.h>
 #include <iostream>
 #include <complex>
 #include <numeric>
 #include <Eigen\Dense>
+Eigen::MatrixXd getCellStructure(const Crystal& crystal){
+	
+	std::string cellType = crystal.getCellType();
+	std::string cellCentering = crystal.getCellCentering();
+	
+	double a = crystal.getAxialDistanceA();
+	double b = crystal.getAxialDistanceB();
+	double c = crystal.getAxialDistanceC();
 
-Eigen::MatrixXd getCellStructure(std::string cellType, std::string cellCentering, double a, double b, double c, double alphadeg, double betadeg, double gammadeg) { // https://en.wikipedia.org/wiki/Crystal_system
+
 	double pi = 3.14159265358979323846;
-	double alpha = alphadeg* (pi/180.);
-	double beta = betadeg * (pi / 180.);
-	double gamma = gammadeg * (pi / 180.);
+	double alpha = crystal.getAxialAngleAlpha()* (pi/180.);
+	double beta = crystal.getAxialAngleBeta() * (pi / 180.);
+	double gamma = crystal.getAxialAngleGamma() * (pi / 180.);
 	Eigen::MatrixXd cellStructure;
 
 	//Fix the general Case!!
@@ -176,10 +186,8 @@ Eigen::MatrixXd getCellStructure(std::string cellType, std::string cellCentering
 
 	}
 	else if (cellType == "cubic") {
-		//std::cout << " Inside salt, primative " << std::endl;
 
 		if (cellCentering == "primative") {
-			//std::cout << " Inside salt, primative " << std::endl;
 			Eigen::MatrixXd cellStructure(8, 3);
 			cellStructure.row(0) << 0, 0, 0;
 			cellStructure.row(1) << a, 0, 0;
