@@ -10,8 +10,6 @@
 
 class Crystal {
 public:
-	//Crystal();
-	//virtual ~Crystal();
 
 	const double getAxialDistanceA() const { return axialDistanceA; }
 	const double getAxialDistanceB() const { return axialDistanceB; }

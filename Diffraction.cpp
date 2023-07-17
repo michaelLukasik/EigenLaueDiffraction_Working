@@ -5,21 +5,30 @@
 #include <math.h>
 #include <windows.h>
 #include <ppl.h>
+
 #include <cmath>
+#include <ctime>
 #include <complex>
 #include <fstream>
 #include <vector>
 #include <iterator>
 #include <iostream>
+#include <iomanip>
 #include <complex>
 #include <numeric>
 #include <Eigen\Dense>
 #include <chrono>
 #include <execution>
 #include <algorithm>
+
 #pragma omp
 
+std::string returnTime()
+{
+	auto t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+	return std::ctime(&t);
 
+}
 // Create a Screen to project the transmition onto
 
 
@@ -30,7 +39,7 @@ Eigen::MatrixXd getScreen(const Config& config) {
 		screen(i, 1) = (std::floor(i / config.getWallDivisions())) * config.getdzdy() - (config.getWallLength() / 2.0); // Second term to center the screen on 0y
 		screen(i, 2) = (i % config.getWallDivisions()) * config.getdzdy() - (config.getWallLength() / 2.0);				// Second term to center the screen on 0z
 	}
-	return screen	;
+	return screen;
 }
 
 Eigen::MatrixXd buildWave(const Eigen::MatrixXd& screen, const Config& config){
@@ -44,11 +53,13 @@ Eigen::MatrixXd buildWave(const Eigen::MatrixXd& screen, const Config& config){
 	}
 	return waveFunction;
 }
-bool isAlmostEqual(const std::vector<double>& v1, const std::vector<double>& v2) {
-	return std::sqrt(pow(v2[0] - v1[0], 2) + pow(v2[1] - v1[1], 2) + pow(v2[2] - v1[2], 2)) < 0.10*std::sqrt(pow(v2[0], 2) + pow(v2[1], 2) + pow(v2[2], 2));
+bool isAlmostEqual(const std::vector<double>& v1, const std::vector<double>& v2, const double atomicDistance) {
+	return ((v2[0] - v1[0]) < atomicDistance and (v2[1] - v1[1]) < atomicDistance and (v2[2] - v1[2]) < atomicDistance);
+	//return std::sqrt(pow(v2[0] - v1[0], 2) + pow(v2[1] - v1[1], 2) + pow(v2[2] - v1[2], 2)) < 0.10*std::sqrt(pow(v2[0], 2) + pow(v2[1], 2) + pow(v2[2], 2));
 }
 Eigen::MatrixXd buildLattice(const Crystal& crystal, const Config& config, const Eigen::MatrixXd& cellStructure){
 //Eigen::MatrixXd buildLattice(int xCells, int yCells, int zCells, double axialDistanceA, double axialDistanceB, double axialDistanceC, const Eigen::MatrixXd& cellStructure) {
+	double atomicDistance = config.geta();
 	std::vector<std::vector<double>> fullLatticeVectors = {}; // We use a standard container here so we can use pushback (and later unique). Eigen::Matrix doesnt have a pushback feature due to memory concerns
 	for (int a = 0; a < cellStructure.rows(); a++) {
 		for (int nxc = 0; nxc <= config.getnx(); nxc++) {
@@ -56,7 +67,7 @@ Eigen::MatrixXd buildLattice(const Crystal& crystal, const Config& config, const
 				for (int nzc = 0; nzc <= config.getnz(); nzc++) {
 					Eigen::Vector3d latticePointPosition(cellStructure(a, 0), cellStructure(a, 1), cellStructure(a, 2));
 					Eigen::Vector3d offsetVector(crystal.getAxialDistanceA() * nxc, crystal.getAxialDistanceB() * nyc, crystal.getAxialDistanceC() * nzc);
-					Eigen::Vector3d centeringVector((config.getnx() + 1. / 2.) * crystal.getAxialDistanceA(), (config.getny() + 1. / 2.) * crystal.getAxialDistanceB(), (config.getnz() + 1. / 2.) * crystal.getAxialDistanceC());
+					Eigen::Vector3d centeringVector(( (config.getnx() + 1.) / 2.) * crystal.getAxialDistanceA(), ( (config.getny() + 1.) / 2.) * crystal.getAxialDistanceB(), ( (config.getnz() + 1. ) / 2.) * crystal.getAxialDistanceC());
 					Eigen::Vector3d finalLatticePointPosition = latticePointPosition + offsetVector - centeringVector;
 					std::vector<double> finalPositionVector(finalLatticePointPosition.data(), finalLatticePointPosition.data() + finalLatticePointPosition.size());
 					fullLatticeVectors.push_back(finalPositionVector);
@@ -66,9 +77,11 @@ Eigen::MatrixXd buildLattice(const Crystal& crystal, const Config& config, const
 		}
 	}
 	std::sort(fullLatticeVectors.begin(), fullLatticeVectors.end());
-	fullLatticeVectors.erase(std::unique(fullLatticeVectors.begin(), fullLatticeVectors.end(), isAlmostEqual), fullLatticeVectors.end()); // Remove duplicates in vector form
-	
-	std::cout << std::endl << "There are " << fullLatticeVectors.size() << " sites in the final lattice after culling duplicate points" << std::endl;
+	//fullLatticeVectors.erase(std::unique(fullLatticeVectors.begin(), fullLatticeVectors.end(), isAlmostEqual), fullLatticeVectors.end()); // Remove duplicates in vector form
+	fullLatticeVectors.erase(std::unique(fullLatticeVectors.begin(), fullLatticeVectors.end(), [&atomicDistance](const std::vector<double>& v1, const std::vector<double>& v2)
+		{return ((v2[0] - v1[0]) < atomicDistance and (v2[1] - v1[1]) < atomicDistance and (v2[2] - v1[2]) < 0.1*atomicDistance);}), fullLatticeVectors.end()); // Remove duplicates in vector form
+
+	std::cout << std::endl << "There are " << fullLatticeVectors.size() << " sites in the final lattice after culling duplicate points \n" << std::endl;
 	
 	Eigen::MatrixXd fullLattice(fullLatticeVectors.size(), 3);
 	for (int i = 0; i < fullLatticeVectors.size(); i++) {
@@ -93,13 +106,11 @@ Eigen::MatrixXd rotateLattice(const Eigen::MatrixXd& fullLattice, const Config& 
 }
 
 Eigen::VectorXd getNormToScreenPosition(const Eigen::MatrixXd& screenPositions, const Eigen::MatrixXd& rotatedLattice, int atomIndex) {
-	Eigen::VectorXd normToScreenPosition(screenPositions.rows());
-
-	
+	Eigen::VectorXd normToScreenPosition(screenPositions.rows());	
 	normToScreenPosition =	 pow(screenPositions.col(0).array() - rotatedLattice(atomIndex, 0),2)
 						 +   pow(screenPositions.col(1).array() - rotatedLattice(atomIndex, 1), 2)
 						 +   pow(screenPositions.col(2).array() - rotatedLattice(atomIndex, 2), 2);
-	
+
 	return normToScreenPosition.array().sqrt();
 	
 }
@@ -183,6 +194,7 @@ void propogateWave(const Config& config, const Eigen::VectorXd& normsToScreen, c
 
 	const std::complex<double> i(0.0, 1.0);
 	const std::complex<double> r(1.0, 0.0);
+
 	Eigen::VectorXd adjacentDistanceForAngleFromAtom(screenPositions.rows());
 	Eigen::VectorXd hypotenuseDistanceForAngleFromAtom(screenPositions.rows());
 
@@ -198,9 +210,9 @@ void propogateWave(const Config& config, const Eigen::VectorXd& normsToScreen, c
 	for (int l = 0; l <= config.getl(); l++) {
 		const int nRows = screenPositions.rows();
 		Eigen::VectorXcd kr = config.getk() * normsToScreen;
-		Eigen::VectorXcd bracket = sphBesselFirstKind(l,kr)  + i * scatteringAmplitude(config, screenPositions.rows(),l) * hankelFirstKind(l, kr);
+		Eigen::VectorXcd innerTerms = sphBesselFirstKind(l,kr)  + i * scatteringAmplitude(config, screenPositions.rows(),l) * hankelFirstKind(l, kr);
 		Eigen::VectorXcd lPoly = legandrePoly(l, angleFromAtomCos);
-		Eigen::VectorXcd partialWaveFunction = pow(i, l) * ((2. * l) + 1.) * bracket.array() * lPoly.array();
+		Eigen::VectorXcd partialWaveFunction = pow(i, l) * ((2. * l) + 1.) * innerTerms.array() * lPoly.array();
 		waveFunction.col(0) += partialWaveFunction.real();
 		waveFunction.col(1) += partialWaveFunction.imag();	
 	}
@@ -226,79 +238,74 @@ void exportData(Eigen::MatrixXd waveFunction, const Config& config) {
 	}
 }
 
-//int main() {
-int main(int argc, char* argv[]) {
 
-	//const std::complex<double> i(0.0, 1.0);
+int main(const int argc, char* argv[]) {
+
 	auto timeStart = std::chrono::high_resolution_clock::now();
-
+	auto timeToPropogation = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - timeStart);
+	const double approxTimePerCalc = 6.275e-6;
+	bool waitForResult = 0; //  Set to true to see timing data for the propogation loop, will include in csv later
 	// Configs are now defined within config.cpp
 	Config config;
-	if (argc == 19) {
-
+	if (argc == 16) {
+		const char* arglist[16] = {"executable", "double wallXPosition", "double dzdy", "double wallLength,", "double lambda", "double theta",
+											"double phi", "double psi", "int l (ylm's for harmonics)", "double a (atomic size)",
+											"int nx", "int ny" , "int nz" ,"string cellCentering", "string cellName", "string configTag" };
+		std::cout << "Paramets inputted: \n";
 		for (int i = 0; i < argc; i++) {
-			std::cout << i << ": " << argv[i] << std::endl;
+			std::cout << i << ": " << argv[i] << " -- " << arglist[i] << std::endl;
 		}
-		config.setFullConfig(std::atof(argv[1]), std::atof(argv[2]), std::atof(argv[3]), std::atof(argv[4]),
-			std::atof(argv[5]), std::atof(argv[6]), std::atof(argv[7]), std::atof(argv[8]),
-			std::atof(argv[9]), std::atof(argv[10]), std::atof(argv[11]), std::atof(argv[12]), argv[13], argv[14], argv[15],
-			std::atoi(argv[16]), std::atoi(argv[17]), std::atoi(argv[18]));
+		config.setFullConfig(std::atof(argv[1]), std::atof(argv[2]), std::atof(argv[3]), 
+			std::atof(argv[4]), std::atof(argv[5]), std::atof(argv[6]),
+			std::atof(argv[7]), std::atof(argv[8]), std::atof(argv[9]), 
+			std::atoi(argv[10]), std::atoi(argv[11]), std::atoi(argv[12]),
+			argv[13], argv[14], argv[15] );
+		waitForResult = 0;
 
 
 	}
 	else {
-		std::cout << argc << std::endl;
-		std::cout << "A full list of argument is 13 arugments long and follows the order: \n"
+		std::cout << "Number of Arguments inputted: " << argc << std::endl;
+		std::cout << "A full list of argument is 15 arugments long and follows the order: \n"
 			" [1] double wallXPosition, [2] double dzdy, [3] double wallLength,\n"
-			" [4] double lambda, [5] double A, [6] double k,\n"
-			" [7] double omega, [8] double theta, [9] double phi,\n"
-			" [10] double psi, [11] int l (ylm), [12] double a (atomic length), "
-			" [13] string cellCentering, [14] string cellName, [15] string configTag,"
-			" [16] int nx, [17] int ny, [18] int nz" << std::endl;
+			" [4] double lambda, [5] double theta, [6] double phi,\n"
+			" [7] double psi, [8] int l (ylm), [9] double a (atomic length),\n"
+			" [10] int nx, [11] int ny, [12] int nz, \n"
+			" [13] string cellCentering, [14] string cellName, [15] string configTag," << std::endl;
+		std::cout << "Using the parameters as defined in setManualConfig in config.cpp" << std::endl;
 		config.setManualConfig();
+		config.setManualConfigTag(config);
+
 	}
 	// Get properties of individual crystal with the proper ortientation
 	Crystal crystal;
 	crystal.setCellStrings(config);
 	crystal.setCellType(crystal);
 	crystal.setCellProperties(crystal);
-
-	std::cout << "Using cellName = " << config.getCellName() << " || Using cellType = " << crystal.getCellType() << " || Using cellCentering = " << config.getCellCentering() << std::endl;
-
 	Eigen::MatrixXd cellStructure = getCellStructure(crystal);
-
+	
 	// Build up the lattice and screen
 	Eigen::MatrixXd fullLattice = buildLattice(crystal, config, cellStructure);
 	Eigen::MatrixXd rotatedLattice = rotateLattice(fullLattice, config);
 	Eigen::MatrixXd wave = buildWave(getScreen(config), config);
 
-	auto timeToPropogation = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - timeStart);
 
-	//auto propogationLambda = [&](auto atomCount, auto config, auto atomIndex, auto wave) {
-	//	auto timeFromLoopStart = std::chrono::high_resolution_clock::now();
-		//std::cout << "Working on atom number " << atomIndex;
-	//	Eigen::VectorXd normsToScreen = getNormToScreenPosition(getScreen(config), rotatedLattice, atomIndex);
+	std::cout << "Using cellName = " << config.getCellName() << " || Using cellType = " << crystal.getCellType() << " || Using cellCentering = " << config.getCellCentering() << std::endl;
+	std::cout << pow(config.getWallLength() / config.getdzdy(), 2) << " points to calculate for " << rotatedLattice.rows() << " atoms in the lattice \n";
+	std::cout << "\n ================================================== \n";
+	std::cout << "Start time = " << returnTime();
+	std::cout << "CSV will be about  " << std::setprecision(3) << 0.0479 * pow(config.getWallLength() / config.getdzdy(), 2) / 1000. << "MBs\n";
+	std::cout << "Come back in roughly " << std::setprecision(3) << approxTimePerCalc * pow(config.getWallLength() / config.getdzdy(), 2) * rotatedLattice.rows() / 60. << " minutes" << std::endl;
+
+	//for (const auto& aIndex : rotatedLattice) {
+	for(int aIndex = 0; aIndex < rotatedLattice.rows(); aIndex++){
+	//std::for_each(rotatedLattice.data(), (rotatedLattice.data() + rotatedLattice.size()), [&]() {
+		auto timeFromLoopStart = std::chrono::high_resolution_clock::now();
+		Eigen::VectorXd normsToScreen = getNormToScreenPosition(getScreen(config), rotatedLattice, aIndex);
 		//std::cout << " (" << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - timeFromLoopStart).count() << " ms to build norm Vector) ";
-	//	propogateWave(config, normsToScreen, getScreen(config), wave, rotatedLattice, atomIndex);
+		propogateWave(config, normsToScreen, getScreen(config), wave, rotatedLattice, aIndex);
 		//std::cout << " (" << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - timeFromLoopStart).count() << " ms Total)" << std::endl;
-	//};
-	//std::for_each(rotatedLattice.begin(), rotatedLattice.cend(), propogationLambda);
-	//std::cout << "Time to propogation loop: " << timeToPropogation.count() << " ms" << std::endl;
-
-	// For each atom, get the contribution from scattering to every screen position. This is the bulk of the calculation 
-	//parallelLoopThroughSource(0, atomIndex, config, rotatedLattice,wave);
-	const int latticePoints = rotatedLattice.rows();
-
-	std::for_each(rotatedLattice.data(), (rotatedLattice.data() + rotatedLattice.size()), [&](int atomIndex) {
-		//for (int atomIndex = 0: rotatedLattice.rows()) {
-			auto timeFromLoopStart = std::chrono::high_resolution_clock::now();
-			//std::cout << "Working on atom number " << atomIndex;
-			Eigen::VectorXd normsToScreen = getNormToScreenPosition(getScreen(config), rotatedLattice, atomIndex);
-			//std::cout << " (" << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - timeFromLoopStart).count() << " ms to build norm Vector) ";
-			propogateWave(config, normsToScreen, getScreen(config), wave, rotatedLattice, atomIndex);
-			//std::cout << " (" << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - timeFromLoopStart).count() << " ms Total)" << std::endl;
-		//}
-		});
+		};
 
 	
 	
@@ -307,8 +314,8 @@ int main(int argc, char* argv[]) {
 	std::cout << "Time per atom:  ~" << (timeToPropogationEnd.count() - timeToPropogation.count())/ (1000. * static_cast<float>(rotatedLattice.rows())) << " s" << std::endl;
 
 	exportData(wave, config);
-
-
+	std::cout << "Time end: " << returnTime();
+	if (waitForResult == 1 ) { std::cin.ignore(); }
 	return 0;
 }	
 

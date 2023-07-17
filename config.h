@@ -22,14 +22,12 @@ public:
 	const double getdzdy() const { return dzdy; }
 	const double getWallLength() const { return wallLength; }
 	const double getLambda() const { return lambda; }
-	const double getA() const { return A; }
 	const double getk() const { return k; }
-	const double getOmega() const { return omega; }
 	const double getTheta() const { return theta; }
 	const double getPhi() const { return phi; }
 	const double getPsi() const { return psi; }
 	const int getl() const { return l; }
-	const double geta() const { return a; } // a in this case refers to the atomic size
+	const double geta() const { return a; } 
 	const int getWallDivisions() const { return wallDivisions; }
 
 	std::string getSaveString() { return saveString; }
@@ -39,9 +37,7 @@ public:
 	void setdzdy(double _dzdy) { this->dzdy = _dzdy; }
 	void setWallLength(double _wallLength) { this->wallLength = _wallLength; }
 	void setLambda(double _lambda) { this->lambda = _lambda; }
-	void setA(double _A) { this->A = _A; }
 	void setk(double _k) { this->k = _k; }
-	void setOmega(double _omega) { this->omega = _omega; }
 	void setTheta(double _theta) { this->theta = _theta; }
 	void setPhi(double _phi) { this->phi = _phi; }
 	void setPsi(double _psi) { this->psi = _psi; }
@@ -58,7 +54,8 @@ public:
 	
 	void setSaveString(Config config);
 	void setManualConfig();
-	void setFullConfig(double _wallXPosition, double _dzdy, double _wallLength, double _lambda, double _A, double _k, double _omega, double _theta, double _phi, double _psi, int _l, double _a, std::string _cellCentering, std::string _cellName, std::string _configTag, int _nx, int _ny, int _nz);
+	void setManualConfigTag(Config &config);
+	void setFullConfig(double _wallXPosition, double _dzdy, double _wallLength, double _lambda, double _theta, double _phi, double _psi, int _l, double _a, int _nx, int _ny, int _nz, std::string _cellCentering, std::string _cellName, std::string _configTag);
 	
 	const std::string getCellName() const { return cellName; }
 	const std::string getCellType() const { return cellType; }
@@ -70,19 +67,17 @@ private:
 	int ny = 1;
 	int nz = 1;
 
-	double wallXPosition = 0.01;// wall at x = wallXPos
-	double dzdy = 0.0002;// dzdy->step size for wall spacing
-	double wallLength = .1; // wall is wallLen x wallLen meters
+	double wallXPosition = 0.01;// wall at x = wallXPos meters
+	double dzdy = 0.0002;// dzdy->step size for wall spacing on a flat surface
+	double wallLength = .1; // wall is wallLen x wallLen meters in area
 	double lambda = 1e-9; // wavelength (meters)
-	double A = 1;  // Amplitude (arbitrary units)
-	double k = 6.2832 / 3.e-9; // wavenumber (1/m)
-	double omega = 0; //
-	double theta = 0;
-	double phi = 0;
-	double psi = 0;
-	int wallDivisions; //= static_cast<int>(std::floor(wallLength / dzdy));
-	int l = 3; // number of spherical harmonics to include
-	double a = 1.;
+	double k = 6.2832 / 3.e-9; // wavenumber (2 * pi / lambda)
+	double theta = 0; // Rotation around __ axis
+	double phi = 0; // Rotation around __ axis
+	double psi = 0; // Rotation around __ axis
+	int wallDivisions; // number of bins in the square (flat) wall
+	int l = 3; // number of spherical harmonics to include (eventually will investigate this, but higher than l=1 or l=2 may )
+	double a = 1.;// a refers to the atomic size
 
 	// Defaults 
 	std::string cellName = "salt";
