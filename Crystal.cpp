@@ -20,7 +20,6 @@ void Crystal::setCellStrings(const Config& config) {
 
 
 void Crystal::setCellType(Crystal& crystal) {
-//void Crystal::setCellType(std::string cellName, std::string cellCentering) {
 	
 	const std::string cellCentering = crystal.getCellCentering();
 	const std::string cellName = crystal.getCellName();
@@ -31,6 +30,8 @@ void Crystal::setCellType(Crystal& crystal) {
 	std::string rhombohedralArray[1] = {"dolomite"};
 	std::string hexagonalArray[1] = { "graphite" };
 	std::string cubicArray[1] = { "salt" };
+	std::string uniqueArray[2] = { "twoCrystal", "loss"}; // Used for testing purposes, just return two open holes as a crystal
+
 
 	if (std::find(std::begin(monoclinicArray), std::end(monoclinicArray), cellName) != std::end(monoclinicArray) && (cellCentering == "primative" || "base-centered")) {
 		
@@ -56,6 +57,10 @@ void Crystal::setCellType(Crystal& crystal) {
 	{
 		this->cellType = "cubic";
 	}
+	else if (std::find(std::begin(uniqueArray), std::end(uniqueArray), cellName) != std::end(uniqueArray) && (cellCentering == "primative" || "body-centered" || "face-centered"))
+	{
+		this->cellType = "unique";
+	}
 	else
 	{
 		std::cout << "Cell name not recognized, Name: " << cellName << " and Centering: " << cellCentering << " is not a valid configuration, check again.";
@@ -71,7 +76,6 @@ void Crystal::setCellProperties(Crystal& crystal) {
 	const std::string cellCentering = crystal.getCellCentering();
 
 	if (cellName == "graphite") { // https://som.web.cmu.edu/structures/S022-C-graphite.html
-
 		Crystal::setAxialDistanceA(2.456e-10);
 		Crystal::setAxialDistanceB(2.456e-10);
 		Crystal::setAxialDistanceC(6.696e-10);
@@ -125,6 +129,36 @@ void Crystal::setCellProperties(Crystal& crystal) {
 		Crystal::setAxialDistanceA(4.815e-10);
 		Crystal::setAxialDistanceB(4.815e-10);
 		Crystal::setAxialDistanceC(16.119e-10);
+
+		Crystal::setAxialAngleAlpha(90);
+		Crystal::setAxialAngleBeta(90);
+		Crystal::setAxialAngleGamma(120);
+	}
+	else if (cellName == "twoCrystal") { // https://www.mindat.org/min-1304.html
+
+		Crystal::setAxialDistanceA(5.59e-10);
+		Crystal::setAxialDistanceB(5.59e-10);
+		Crystal::setAxialDistanceC(5.59e-10);
+
+		Crystal::setAxialAngleAlpha(90);
+		Crystal::setAxialAngleBeta(90);
+		Crystal::setAxialAngleGamma(90);
+	}
+
+	else if (cellName == "loss") { // :(
+		Crystal::setAxialDistanceA(5.59e-10);
+		Crystal::setAxialDistanceB(5.59e-10);
+		Crystal::setAxialDistanceC(5.59e-10);
+
+		Crystal::setAxialAngleAlpha(90);
+		Crystal::setAxialAngleBeta(90);
+		Crystal::setAxialAngleGamma(90);
+	}
+
+	else if (cellName == "graphite2D") { // :(
+		Crystal::setAxialDistanceA(2.456e-10);
+		Crystal::setAxialDistanceB(2.456e-10);
+		Crystal::setAxialDistanceC(0);
 
 		Crystal::setAxialAngleAlpha(90);
 		Crystal::setAxialAngleBeta(90);
