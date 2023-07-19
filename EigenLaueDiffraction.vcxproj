@@ -128,8 +128,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Diffraction.cpp">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Michael\source\repos\EigenLaueDiffraction;C:\Users\Michael\Documents\Include\eigen-3.4.0;C:\Users\Michael\Documents\Include\matclpro;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Michael\source\repos\EigenLaueDiffraction;C:\Users\Michael\Documents\Include\eigen-3.4.0;C:\Users\Michael\Documents\Include\matclpro;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Michael\Documents\Include\fftw;C:\Users\Michael\source\repos\EigenLaueDiffraction;C:\Users\Michael\Documents\Include\eigen-3.4.0;C:\Users\Michael\Documents\Include\matclpro;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Michael\Documents\Include\fftw;C:\Users\Michael\source\repos\EigenLaueDiffraction;C:\Users\Michael\Documents\Include\eigen-3.4.0;C:\Users\Michael\Documents\Include\matclpro;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpp20</LanguageStandard>
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdcpp20</LanguageStandard>
     </ClCompile>
@@ -145,12 +145,17 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Michael\Documents\Include\matclpro;C:\Users\Michael\Documents\Include\eigen-3.4.0;C:\Users\Michael\source\repos\EigenLaueDiffraction;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Michael\Documents\Include\matclpro;C:\Users\Michael\Documents\Include\eigen-3.4.0;C:\Users\Michael\source\repos\EigenLaueDiffraction;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="Bluestein.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Michael\Documents\Include\fftw;C:\Users\Michael\Documents\Include\eigen-3.4.0;C:\Users\Michael\Documents\Include\matclpro;C:\Users\Michael\source\repos\EigenLaueDiffraction;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Michael\Documents\Include\fftw;C:\Users\Michael\Documents\Include\eigen-3.4.0;C:\Users\Michael\Documents\Include\matclpro;C:\Users\Michael\source\repos\EigenLaueDiffraction;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Diffraction.h" />
     <ClInclude Include="Bravais.h" />
     <ClInclude Include="Crystal.h" />
     <ClInclude Include="config.h" />
+    <ClInclude Include="Bluestein.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

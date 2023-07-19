@@ -5,6 +5,8 @@
 #include <math.h>
 #include <windows.h>
 #include <ppl.h>
+#include <Bluestein.h>
+#include <fftw3.h>
 
 #include <cmath>
 #include <ctime>
@@ -20,6 +22,8 @@
 #include <chrono>
 #include <execution>
 #include <algorithm>
+#include <Eigen/../unsupported/Eigen/FFT>
+
 
 #pragma omp
 
@@ -217,7 +221,7 @@ void propogateWave(const Config& config, const Eigen::VectorXd& normsToScreen, c
 		waveFunction.col(1) += partialWaveFunction.imag();	
 	}
 }
-
+//void propogateWaveFFT
 void exportData(Eigen::MatrixXd waveFunction, const Config& config) {
 	std::vector<std::vector<double>> waveFunctionVectors = {};
 	for (int i = 0; i < waveFunction.rows(); i++) {
@@ -297,14 +301,11 @@ int main(const int argc, char* argv[]) {
 	std::cout << "CSV will be about  " << std::setprecision(3) << 0.0479 * pow(config.getWallLength() / config.getdzdy(), 2) / 1000. << "MBs\n";
 	std::cout << "Come back in roughly " << std::setprecision(3) << approxTimePerCalc * pow(config.getWallLength() / config.getdzdy(), 2) * rotatedLattice.rows() / 60. << " minutes" << std::endl;
 
-	//for (const auto& aIndex : rotatedLattice) {
+	
 	for(int aIndex = 0; aIndex < rotatedLattice.rows(); aIndex++){
-	//std::for_each(rotatedLattice.data(), (rotatedLattice.data() + rotatedLattice.size()), [&]() {
 		auto timeFromLoopStart = std::chrono::high_resolution_clock::now();
 		Eigen::VectorXd normsToScreen = getNormToScreenPosition(getScreen(config), rotatedLattice, aIndex);
-		//std::cout << " (" << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - timeFromLoopStart).count() << " ms to build norm Vector) ";
 		propogateWave(config, normsToScreen, getScreen(config), wave, rotatedLattice, aIndex);
-		//std::cout << " (" << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - timeFromLoopStart).count() << " ms Total)" << std::endl;
 		};
 
 	
