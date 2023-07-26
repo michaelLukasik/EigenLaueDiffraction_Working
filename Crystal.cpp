@@ -30,7 +30,7 @@ void Crystal::setCellType(Crystal& crystal) {
 	std::string rhombohedralArray[1] = {"dolomite"};
 	std::string hexagonalArray[1] = { "graphite" };
 	std::string cubicArray[1] = { "salt" };
-	std::string uniqueArray[2] = { "twoCrystal", "loss"}; // Used for testing purposes, just return two open holes as a crystal
+	std::string uniqueArray[5] = { "twoCrystal", "loss", "DNA", "BDNA", "B10DNA" };
 
 
 	if (std::find(std::begin(monoclinicArray), std::end(monoclinicArray), cellName) != std::end(monoclinicArray) && (cellCentering == "primative" || "base-centered")) {
@@ -155,7 +155,7 @@ void Crystal::setCellProperties(Crystal& crystal) {
 		Crystal::setAxialAngleGamma(90);
 	}
 
-	else if (cellName == "graphite2D") { // :(
+	else if (cellName == "graphite2D") { // 
 		Crystal::setAxialDistanceA(2.456e-10);
 		Crystal::setAxialDistanceB(2.456e-10);
 		Crystal::setAxialDistanceC(0);
@@ -163,6 +163,33 @@ void Crystal::setCellProperties(Crystal& crystal) {
 		Crystal::setAxialAngleAlpha(90);
 		Crystal::setAxialAngleBeta(90);
 		Crystal::setAxialAngleGamma(120);
+	}
+	else if (cellName == "DNA") { // https://pubs.aip.org/aapt/ajp/article/86/2/95/1057814/Rosalind-Franklin-s-X-ray-photo-of-DNA-as-an
+		Crystal::setAxialDistanceA(1.e-9);
+		Crystal::setAxialDistanceB(3.4e-9);
+		Crystal::setAxialDistanceC(1.e-9);
+
+		Crystal::setAxialAngleAlpha(90);
+		Crystal::setAxialAngleBeta(90);
+		Crystal::setAxialAngleGamma(90);
+	}
+	else if (cellName == "BDNA") { // https://pubs.aip.org/aapt/ajp/article/86/2/95/1057814/Rosalind-Franklin-s-X-ray-photo-of-DNA-as-an
+		Crystal::setAxialDistanceA(1.e-9);
+		Crystal::setAxialDistanceB(3.4e-9);
+		Crystal::setAxialDistanceC(1.e-9);
+
+		Crystal::setAxialAngleAlpha(90);
+		Crystal::setAxialAngleBeta(90);
+		Crystal::setAxialAngleGamma(90);
+	}
+	else if (cellName == "B10DNA") { // https://pubs.aip.org/aapt/ajp/article/86/2/95/1057814/Rosalind-Franklin-s-X-ray-photo-of-DNA-as-an
+		Crystal::setAxialDistanceA(1.e-9);
+		Crystal::setAxialDistanceB(3.4e-9);
+		Crystal::setAxialDistanceC(1.e-9);
+
+		Crystal::setAxialAngleAlpha(90);
+		Crystal::setAxialAngleBeta(90);
+		Crystal::setAxialAngleGamma(90);
 	}
 	else {
 		throw "No match to cellName, check cellName and rerun the program";

@@ -34,8 +34,6 @@ std::string returnTime()
 
 }
 // Create a Screen to project the transmition onto
-
-
 Eigen::MatrixXd getScreen(const Config& config) {
 	Eigen::MatrixXd screen(static_cast<int>(std::floor(std::pow(config.getWallDivisions(), 2))), 3);
 	for (int i = 0; i < std::pow(config.getWallDivisions(), 2); ++i) {
@@ -58,11 +56,10 @@ Eigen::MatrixXd buildWave(const Eigen::MatrixXd& screen, const Config& config){
 	return waveFunction;
 }
 bool isAlmostEqual(const std::vector<double>& v1, const std::vector<double>& v2, const double atomicDistance) {
-	return ((v2[0] - v1[0]) < atomicDistance and (v2[1] - v1[1]) < atomicDistance and (v2[2] - v1[2]) < atomicDistance);
-	//return std::sqrt(pow(v2[0] - v1[0], 2) + pow(v2[1] - v1[1], 2) + pow(v2[2] - v1[2], 2)) < 0.10*std::sqrt(pow(v2[0], 2) + pow(v2[1], 2) + pow(v2[2], 2));
+	std::cout << ((v2[0] - v1[0]) < 0.1 * atomicDistance and (v2[1] - v1[1]) < 0.1 * atomicDistance and (v2[2] - v1[2]) < 0.1 * atomicDistance) << std::endl;
+	return ((v2[0] - v1[0]) < 0.1 * atomicDistance and (v2[1] - v1[1]) < 0.1 * atomicDistance and (v2[2] - v1[2]) < 0.1 * atomicDistance);
 }
 Eigen::MatrixXd buildLattice(const Crystal& crystal, const Config& config, const Eigen::MatrixXd& cellStructure){
-//Eigen::MatrixXd buildLattice(int xCells, int yCells, int zCells, double axialDistanceA, double axialDistanceB, double axialDistanceC, const Eigen::MatrixXd& cellStructure) {
 	double atomicDistance = config.geta();
 	std::vector<std::vector<double>> fullLatticeVectors = {}; // We use a standard container here so we can use pushback (and later unique). Eigen::Matrix doesnt have a pushback feature due to memory concerns
 	for (int a = 0; a < cellStructure.rows(); a++) {
@@ -81,13 +78,13 @@ Eigen::MatrixXd buildLattice(const Crystal& crystal, const Config& config, const
 		}
 	}
 	std::sort(fullLatticeVectors.begin(), fullLatticeVectors.end());
-	//fullLatticeVectors.erase(std::unique(fullLatticeVectors.begin(), fullLatticeVectors.end(), isAlmostEqual), fullLatticeVectors.end()); // Remove duplicates in vector form
 	fullLatticeVectors.erase(std::unique(fullLatticeVectors.begin(), fullLatticeVectors.end(), [&atomicDistance](const std::vector<double>& v1, const std::vector<double>& v2)
-		{return ((v2[0] - v1[0]) < atomicDistance and (v2[1] - v1[1]) < atomicDistance and (v2[2] - v1[2]) < 0.1*atomicDistance);}), fullLatticeVectors.end()); // Remove duplicates in vector form
+		{return (std::abs(v2[0] - v1[0]) < atomicDistance and std::abs(v2[1] - v1[1]) <  atomicDistance and std::abs(v2[2] - v1[2]) < atomicDistance);}), fullLatticeVectors.end()); // Remove duplicates in vector form
 
 	std::cout << std::endl << "There are " << fullLatticeVectors.size() << " sites in the final lattice after culling duplicate points \n" << std::endl;
 	
 	Eigen::MatrixXd fullLattice(fullLatticeVectors.size(), 3);
+
 	for (int i = 0; i < fullLatticeVectors.size(); i++) {
 		fullLattice.row(i) << fullLatticeVectors[i][0], fullLatticeVectors[i][1], fullLatticeVectors[i][2]; //put the vectors back into Eigen form for easy use later
 	}
@@ -162,11 +159,11 @@ double  sphBesselSecondKind(int l, double x) {
 Eigen::VectorXcd legandrePoly(int l, Eigen::VectorXcd x) {
 
 	if (l == 0) { return pow(x.array(), 0); }
-	if (l == 1) { return x; }
-	if (l == 2) { return (1. / 2.) * (3. * x.array().square() - 1.); }
-	if (l == 3) { return (1. / 2.) * (5. * pow(x.array(), 3.) - 3. * x.array()); }
+	else if (l == 1) { return x; }
+	else if (l == 2) { return (1. / 2.) * (3. * x.array().square() - 1.); }
+	else if (l == 3) { return (1. / 2.) * (5. * pow(x.array(), 3.) - 3. * x.array()); }
 	//if (l == 4) { return (1. / 8.) * (35. * pow(x.array(), 4) - 30. * pow(x.array(),2) + 3); }
-	if (l >= 4) { throw "Currently not taking l > 3"; }
+	else if (l >= 4) { throw "Currently not taking l > 3"; }
 
 }
 
@@ -235,7 +232,7 @@ void exportData(Eigen::MatrixXd waveFunction, const Config& config) {
 	std::string savePath = "C:\\Users\\Michael\\Documents\\Programming\\laueDiffractionResults\\csvFiles\\EigenResults_" +saveTag + ".csv";
 	
 	std::ofstream out(savePath);
-	for (auto& row : waveFunctionVectors) {
+	for (auto &row : waveFunctionVectors) {
 		for (auto col : row)
 			out << col << ',';
 		out << '\n';
@@ -249,6 +246,7 @@ int main(const int argc, char* argv[]) {
 	auto timeToPropogation = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - timeStart);
 	const double approxTimePerCalc = 6.275e-6;
 	bool waitForResult = 0; //  Set to true to see timing data for the propogation loop, will include in csv later
+	
 	// Configs are now defined within config.cpp
 	Config config;
 	if (argc == 16) {
