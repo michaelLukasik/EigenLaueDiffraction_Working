@@ -294,11 +294,81 @@ Eigen::MatrixXd getCellStructure(const Crystal& crystal){
 			cellStructure.row(2) << -a * std::sin(pi / 6.), a* std::cos(pi / 6.), 0;
 			cellStructure.row(3) << a - a * std::sin(pi / 6.), a* std::cos(pi / 6.), 0;
 			return cellStructure;
+		}
+		else if (cellName == "DNA") {
+			const float pitch = 3.4e-9;
+			const float r = 1.0e-9;
+			const float inner_r = r / 2.;
+			const int nPoints = 10;
+			const float nPointsf = float(nPoints);
+			const float phase = (180.) * pi / 180.;
 
+			Eigen::MatrixXd cellStructure(4*nPoints, 3); // Pointing Up Towards +y
+			for (int i = 0; i < nPoints; ++i) {
+				cellStructure.row(i) << r * std::sin( (float(i) * 2. * pi) / nPointsf), i* (pitch / nPointsf), r * std::cos((float(i) * 2. * pi) / nPointsf);
+				cellStructure.row(i + nPoints) << r * std::sin(-1.*((float(i) * 2. * pi + phase ) / nPointsf) + phase), i* (pitch / nPointsf), r* std::cos(-1.*((float(i) * 2. * pi) / nPointsf) + phase);
+				cellStructure.row(i + (2*nPoints)) << inner_r * std::sin((float(i) * 2. * pi) / nPointsf), i* (pitch / nPointsf), inner_r* std::cos((float(i) * 2. * pi) / nPointsf);
+				cellStructure.row(i + (3*nPoints)) << inner_r * std::sin(((float(i) * 2. * pi) / nPointsf) + phase), i* (pitch / nPointsf), inner_r* std::cos(((float(i) * 2. * pi) / nPointsf) + phase);
+			}
+			for (int i = 0; i < cellStructure.rows(); ++i) {
+				std::cout << "[" << cellStructure(i, 0) << "," << cellStructure(i, 1) << "," << cellStructure(i, 2) << "]," << std::endl;
+			}
+			return cellStructure;
+		}
+
+		else if (cellName == "BDNA") {
+			const float pitch = 3.4e-9;
+			const float r = 1.0e-9;
+			const float inner_r = r / 2.;
+			const float inner_inner_r = r / 4.;
+			const int nPoints = 20;
+			const float nPointsf = float(nPoints);
+			const float phase = (90.) * pi / 180.;
+
+			Eigen::MatrixXd cellStructure(6 * nPoints, 3); // Pointing Up Towards +y
+			for (int i = 0; i < nPoints; ++i) {
+				cellStructure.row(i) << r * std::sin((float(i) * 2. * pi) / nPointsf), i* (pitch / nPointsf), r* std::cos((float(i) * 2. * pi) / nPointsf);
+				cellStructure.row(i + nPoints) << r * std::sin(-1. * ((float(i) * 2. * pi + phase) / nPointsf) + phase), i* (pitch / nPointsf), r* std::cos(-1. * ((float(i) * 2. * pi) / nPointsf) + phase);
+				cellStructure.row(i + (2 * nPoints)) << inner_r * std::sin((float(i) * 2. * pi) / nPointsf), i* (pitch / nPointsf), inner_r* std::cos((float(i) * 2. * pi) / nPointsf);
+				cellStructure.row(i + (3 * nPoints)) << inner_r * std::sin(((float(i) * 2. * pi) / nPointsf) + phase), i* (pitch / nPointsf), inner_r* std::cos(((float(i) * 2. * pi) / nPointsf) + phase);
+				cellStructure.row(i + (4 * nPoints)) << inner_inner_r * std::sin((float(i) * 2. * pi) / nPointsf), i* (pitch / nPointsf), inner_inner_r* std::cos((float(i) * 2. * pi) / nPointsf);
+				cellStructure.row(i + (5 * nPoints)) << inner_inner_r * std::sin(((float(i) * 2. * pi) / nPointsf) + phase), i* (pitch / nPointsf), inner_inner_r* std::cos(((float(i) * 2. * pi) / nPointsf) + phase);
+			}
+			//for (int i = 0; i < cellStructure.rows(); ++i) {
+			//	std::cout << "[" << cellStructure(i, 0) << "," << cellStructure(i, 1) << "," << cellStructure(i, 2) << "]," << std::endl;
+			//}
+			//std::cin.ignore();
+			return cellStructure;
+		}
+
+		else if (cellName == "B10DNA") {
+			const float pitch = 3.4e-9;
+			const float r = 1.0e-9;
+			const float inner_r = r / 2.;
+			const float inner_inner_r = r / 4.;
+			const int nPoints = 10;
+			const float nPointsf = float(nPoints);
+			const float phase = (180.) * pi / 180.;
+
+			Eigen::MatrixXd cellStructure(6 * nPoints, 3); // Pointing Up Towards +y
+			for (int i = 0; i < nPoints; ++i) {
+				cellStructure.row(i) << r * std::sin((float(i) * 2. * pi) / nPointsf), i* (pitch / nPointsf), r* std::cos((float(i) * 2. * pi) / nPointsf);
+				cellStructure.row(i + nPoints) << r * std::sin(-1. * ((float(i) * 2. * pi + phase) / nPointsf) + phase), i* (pitch / nPointsf), r* std::cos(-1. * ((float(i) * 2. * pi) / nPointsf) + phase);
+				cellStructure.row(i + (2 * nPoints)) << inner_r * std::sin((float(i) * 2. * pi) / nPointsf), i* (pitch / nPointsf), inner_r* std::cos((float(i) * 2. * pi) / nPointsf);
+				cellStructure.row(i + (3 * nPoints)) << inner_r * std::sin(((float(i) * 2. * pi) / nPointsf) + phase), i* (pitch / nPointsf), inner_r* std::cos(((float(i) * 2. * pi) / nPointsf) + phase);
+				cellStructure.row(i + (4 * nPoints)) << inner_inner_r * std::sin((float(i) * 2. * pi) / nPointsf), i* (pitch / nPointsf), inner_inner_r* std::cos((float(i) * 2. * pi) / nPointsf);
+				cellStructure.row(i + (5 * nPoints)) << inner_inner_r * std::sin(((float(i) * 2. * pi) / nPointsf) + phase), i* (pitch / nPointsf), inner_inner_r* std::cos(((float(i) * 2. * pi) / nPointsf) + phase);
+			}
+			//for (int i = 0; i < cellStructure.rows(); ++i) {
+			//	std::cout << "[" << cellStructure(i, 0) << "," << cellStructure(i, 1) << "," << cellStructure(i, 2) << "]," << std::endl;
+			//}
+			//std::cin.ignore();
+			return cellStructure;
 		}
 		else {
 			std::cout << "WARNING: cellType not recognized, returing empty cell structure \n";
 		}
+
 	}
 
 }
