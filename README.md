@@ -11,7 +11,7 @@ A working directory for an xray diffraction simulation for periodic crystaline s
 Typical approaches to opical-path tracing employ a fourier-optics approach to solve the wave equation via approximation to first order and using a fourier series to simulate "propogation" of the wave over some distance. 
 
 This approach has three glaring flaws that are often overlooked in favour of simplicity of calculations: 
-1) A complete loss of phase information at the point of direct measurement (plotting the intensity). This leads to the eponymously dubbed "phase problem" frequently dealt with in modern day cystolography.
+1) A complete loss of phase information at the point of direct measurement (plotting the intensity). This leads to the eponymously dubbed "phase problem" frequently dealt with in modern day crystolography.
 2) The implicit "squashing" of the third spacial directions when approximating the radiating stucture as a 2-Dimensional Appeture through which the diffraction occurs. 
 3) An abandonment of quantum phenomena in favor of a geometric interpretation of scattering within a crystal, which leads to a loss of information in quantum correction effects
 
