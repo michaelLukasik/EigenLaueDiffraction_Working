@@ -19,6 +19,8 @@ This approach has three glaring flaws that are often overlooked in favour of sim
 
 By employing a physics-based framework for the simulation, these flaws are handeled within the calculations and the only approximation needed is handled by the user at run time (via terminating the partial wave analysis summation at an early index)
 
+## Current Status and Immediate Goals
+
 Currently, the program is capable of reporducing experimentally backed results for simple mineral lattices (crystaline materials falling into one of the 6 families of Bravais latticies), as well as special user-defined "unique" crystals that require a bit more finese in modeling (such as B-form DNA).
 
 Some main goals of the project that are yet to be handeled fully, but are vital to expanding the usefulness of the simulation: 
@@ -43,6 +45,12 @@ After image processing and filtering the **heavily** broadened diffraction lines
 And overlaying the locations of the detected Laue spots (red circule) onto the direct observation at the projection screen within the simulation, we see nice agreement. The underyling structure revealing within the illumnated laue spots is merely an effect of aliasing due to improper sampling at run time. The sensitivity to thresholding provides a good analouge to the variable of time in real world experiments -- a single simulation run for a single orientation of a crystal can take ~10 seconds, real world experiments take on the order of days depending on the equipment. Increased false-positive rates increase with radial distance, this is adjustable via proper treshholding and is analogous to pre-maturely removing a photographic plate during the experiement. 
 
 ![LaueDetectionKeypoints](https://github.com/michaelLukasik/EigenLaueDiffraction_Working/assets/138163589/d4ce6cd2-858b-4a25-a47a-321c251c192c)
+
+## More complicated crystaline structure
+
+To be a crystal in a physical sense speaks only to the structure of an object defined by its highly predicably and periodic nature. In this sense, anything mathching this periodic condition can be treated (albeit with a bit more tact) as a crystal. This has been used heavily in the fields of chemsitry and biology, where XRay Diffraction and Crystalography data are cruitial to understanding chemical structure and function. Ear;y pioners of this thinking included Rosalin Franklin, who produced the now famous Photo 51, characterizing the double-helix shape of DNA using nothing but the principles explored earlier in this project. Thus, recreation of her results should be possible within the framework of the simulation. 
+
+Realistically, there are some effects that appear within the simulation that make an exact 1:1 comparison with experimental results difficult, however proper data analysis can ease the discrepencies. The most glaring difficulty presented currently is the inability to scale the crystal to arbitrary sizes without sacrificing enormous emounts of time. This leads to difficulty in modeling the "congregate effect" of large-crystal systems; that is to say the physical edges of our simulated crystal impede on the "idealized" diffraction pattern that would be created in aggregate. To illustrate this point, we examine the simulated diffraction pattern of B-Form DNA, the most common form of DNA we all likely think of in our minds.
 
 
 
