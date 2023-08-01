@@ -24,7 +24,7 @@ void Config::setManualConfigTag(Config &config) {
 	std::string name_str = config.getCellName();
 	std::string centering_str = config.getCellCentering();
 	 
-	// Combine them all in a similar way s.t. we can use the plotting script for the rotating case
+	// Combine them all in a similar way s.t. we can use the plotting script for the variable settings case
 	
 	std::fixed;
 	configTag << "CONFIG_" << xpos_str << "XPOS_" << dzdy_str << "DZDY_" << len_str << "LEN_" << theta_str << "THETA_" << phi_str << "PHI_" << psi_str << "PSI_" << nx_str << "NX_" << ny_str << "NY_" << nz_str << "NZ_" << lambda_str << "LAMBDA_";
@@ -49,7 +49,6 @@ void Config::setManualConfig() {
 	Config::setnz(1);
 	Config::setWallDivisions(Config::getdzdy(), Config::getWallLength());
 
-	//Config::setSaveString("C:\\Users\\Michael\\Documents\\Programming\\laueDiffractionResults\\rotationTests\\EigenResultsFaceHighRes.csv");
 	Config::setCellCentering("primative");
 	Config::setCellName("salt");
 	Config::setCellType("");

@@ -17,7 +17,6 @@ public:
 	void setnz(int _nz) { this->nz = _nz; }
 
 
-	//double get() { return; }
 	const double getWallXPosition() const { return  wallXPosition; }
 	const double getdzdy() const { return dzdy; }
 	const double getWallLength() const { return wallLength; }
@@ -32,7 +31,6 @@ public:
 
 	std::string getSaveString() { return saveString; }
 
-	//void set(double _) { this-> = _; }
 	void setWallXPosition(double _wallXPosition) { this->wallXPosition = _wallXPosition; }
 	void setdzdy(double _dzdy) { this->dzdy = _dzdy; }
 	void setWallLength(double _wallLength) { this->wallLength = _wallLength; }

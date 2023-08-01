@@ -67,8 +67,7 @@ void Crystal::setCellType(Crystal& crystal) {
 		throw;
 	}
 }
-void Crystal::setCellProperties(Crystal& crystal) {
-//void Crystal::setCellProperties(std::string cellName, std::string cellCentering, std::string cellType) { //https://next-gen.materialsproject.org/materials/mp-22862
+void Crystal::setCellProperties(Crystal& crystal) { //https://next-gen.materialsproject.org/materials/mp-22862
 	
 	const std::string cellName = crystal.getCellName();
 

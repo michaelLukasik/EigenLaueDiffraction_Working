@@ -5,9 +5,6 @@
 #include <math.h>
 #include <windows.h>
 #include <ppl.h>
-#include <Bluestein.h>
-#include <fftw3.h>
-
 #include <cmath>
 #include <ctime>
 #include <complex>
@@ -24,8 +21,6 @@
 #include <algorithm>
 #include <Eigen/../unsupported/Eigen/FFT>
 
-
-#pragma omp
 
 std::string returnTime()
 {
@@ -122,7 +117,7 @@ Eigen::VectorXcd sphBesselFirstKind(int l, Eigen::VectorXcd x) {
 	if (l == 1) { return (x.array().sin() / pow(x.array(),2)) - (x.array().cos()) / x.array(); }
 	if (l == 2) { return ((3. / x.array().square()) - 1.) * (x.array().sin() / x.array()) - (3. * x.array().cos() / x.array().square()); }
 	if (l == 3) { return ((15. / x.array().cube()) - (6. / x.array())) * (x.array().sin() / x.array()) - ((15. / x.array().square() -1)*(x.array().cos() / x.array())); }
-	if (l >= 4) { throw "Currently not taking l > 3"; }
+	if (l >= 4) { throw "Currently not taking l > 3"; } // Computation/results payoff not worth it. Could be interesting for l-spectrum study, but currently not needed. 
 
 }
 
