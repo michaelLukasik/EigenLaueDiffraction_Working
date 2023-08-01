@@ -292,7 +292,7 @@ int main(const int argc, char* argv[]) {
 	std::cout << "\n ================================================== \n";
 	std::cout << "Start time = " << returnTime();
 	std::cout << "CSV will be about  " << std::setprecision(3) << 0.0479 * pow(config.getWallLength() / config.getdzdy(), 2) / 1000. << "MBs\n";
-	std::cout << "Come back in roughly " << std::setprecision(3) << approxTimePerCalc * pow(config.getWallLength() / config.getdzdy(), 2) * rotatedLattice.rows() / 60. << " minutes" << std::endl;
+	std::cout << "Come back in *roughly* " << std::setprecision(3) << approxTimePerCalc * pow(config.getWallLength() / config.getdzdy(), 2) * rotatedLattice.rows() / 60. << " minutes" << std::endl;
 
 	
 	for(int aIndex = 0; aIndex < rotatedLattice.rows(); aIndex++){
