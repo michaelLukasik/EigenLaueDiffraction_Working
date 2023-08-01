@@ -22,14 +22,9 @@ Eigen::MatrixXd getCellStructure(const Crystal& crystal){
 	double beta = crystal.getAxialAngleBeta() * (pi / 180.);
 	double gamma = crystal.getAxialAngleGamma() * (pi / 180.);
 
-	//Eigen::MatrixXd cellStructure;
-
 	//Fix the general Case!!
 	/*if (cellType == "triclinic") { // 3 different atomic spacing, 3 different axial angles
-		Eigen::MatrixXd cellStructure(8, 3);
-		cellStructure << 0, 0, 0 ;
-		cellStructure << a*std::sin(gamma),a*std::cos(gamma),
-
+			.......
 	}
 	*/
 
@@ -323,7 +318,7 @@ Eigen::MatrixXd getCellStructure(const Crystal& crystal){
 			const float inner_inner_r = r / 4.;
 			const int nPoints = 20;
 			const float nPointsf = float(nPoints);
-			const float phase = (90.) * pi / 180.;
+			const float phase = (180.) * pi / 180.;
 
 			Eigen::MatrixXd cellStructure(6 * nPoints, 3); // Pointing Up Towards +y
 			for (int i = 0; i < nPoints; ++i) {
