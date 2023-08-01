@@ -291,7 +291,7 @@ int main(const int argc, char* argv[]) {
 	std::cout << pow(config.getWallLength() / config.getdzdy(), 2) << " points to calculate for " << rotatedLattice.rows() << " atoms in the lattice \n";
 	std::cout << "\n ================================================== \n";
 	std::cout << "Start time = " << returnTime();
-	std::cout << "CSV will be about  " << std::setprecision(3) << 0.0479 * pow(config.getWallLength() / config.getdzdy(), 2) / 1000. << "MBs\n";
+	std::cout << "CSV will be about  " << std::setprecision(3) << 0.0478 * pow(config.getWallLength() / config.getdzdy(), 2) / 1000. << "MBs\n";
 	std::cout << "Come back in *roughly* " << std::setprecision(3) << approxTimePerCalc * pow(config.getWallLength() / config.getdzdy(), 2) * rotatedLattice.rows() / 60. << " minutes" << std::endl;
 
 	
