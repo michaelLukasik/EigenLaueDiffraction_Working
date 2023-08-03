@@ -16,6 +16,9 @@
     <Filter Include="Python">
       <UniqueIdentifier>{eed14ea2-fce6-4172-923f-202dfa4e8df6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Python">
+      <UniqueIdentifier>{da2e0f6e-a749-44c8-8a1e-fff3b8c391c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Diffraction.cpp">
@@ -53,19 +56,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\Documents\Programming\laueDiffractionResults\makeImages\LaueDiffraction\makeImages\averageDNA.py">
-      <Filter>Python</Filter>
+      <Filter>Source Files\Python</Filter>
     </None>
     <None Include="..\..\..\Documents\Programming\laueDiffractionResults\makeImages\LaueDiffraction\makeImages\getTags.py">
-      <Filter>Python</Filter>
+      <Filter>Source Files\Python</Filter>
     </None>
     <None Include="..\..\..\Documents\Programming\laueDiffractionResults\makeImages\LaueDiffraction\makeImages\imageMaker.py">
-      <Filter>Python</Filter>
+      <Filter>Source Files\Python</Filter>
     </None>
     <None Include="..\..\..\Documents\Programming\laueDiffractionResults\makeImages\LaueDiffraction\makeImages\makeImages.py">
-      <Filter>Python</Filter>
+      <Filter>Source Files\Python</Filter>
     </None>
     <None Include="..\..\..\Documents\Programming\laueDiffractionResults\makeImages\LaueDiffraction\makeImages\tools.py">
-      <Filter>Python</Filter>
+      <Filter>Source Files\Python</Filter>
     </None>
   </ItemGroup>
 </Project>
