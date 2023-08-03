@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Python">
+      <UniqueIdentifier>{eed14ea2-fce6-4172-923f-202dfa4e8df6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Diffraction.cpp">
@@ -47,5 +50,22 @@
     <ClInclude Include="Bluestein.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Documents\Programming\laueDiffractionResults\makeImages\LaueDiffraction\makeImages\averageDNA.py">
+      <Filter>Python</Filter>
+    </None>
+    <None Include="..\..\..\Documents\Programming\laueDiffractionResults\makeImages\LaueDiffraction\makeImages\getTags.py">
+      <Filter>Python</Filter>
+    </None>
+    <None Include="..\..\..\Documents\Programming\laueDiffractionResults\makeImages\LaueDiffraction\makeImages\imageMaker.py">
+      <Filter>Python</Filter>
+    </None>
+    <None Include="..\..\..\Documents\Programming\laueDiffractionResults\makeImages\LaueDiffraction\makeImages\makeImages.py">
+      <Filter>Python</Filter>
+    </None>
+    <None Include="..\..\..\Documents\Programming\laueDiffractionResults\makeImages\LaueDiffraction\makeImages\tools.py">
+      <Filter>Python</Filter>
+    </None>
   </ItemGroup>
 </Project>
