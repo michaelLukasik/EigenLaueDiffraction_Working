@@ -69,4 +69,6 @@ The simulated crystal shows heavy banding immediately in the viscinity of the ax
 We can assume further that hyrdation to fiberous DNA does not only rotationally average the diffraction pattern along its major axis, but minor axis as well. A true diffraction image, such as Franklin's,  would be averaging the diffration pattern over thousands of DNA units at random orientations, thus a true simulation would require full integration over all possible orientations of the crystal. However due to time limitations of the simulations, we instead only average here over rotations about the X,Y, and Z axis with the understanding more averaging leads to more representative results.
 
 
+## An interesting aside (connection to Julia Sets, Newton's Method)
 
+As an interesting aside, we can turn our attention quickly to the concept of Newton's Method. When solving for the roots of a polynomial, one can employ Newton's Method which is method of updating one's initial (possibly random) guess based on the properties of the function being studied at the point of the guess. Specifically, with Newton's Method, one takes the ratio of the function at that point, with the _derivative_ of the function at that points 
