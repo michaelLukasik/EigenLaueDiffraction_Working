@@ -93,3 +93,5 @@ The areas just to either edge of the Julia set desrcribe an area of instability 
 Points that lie directly on the Julia set correspond to an "equal" contribution from each of the roots, this corresponds to areas of constructive interference in the diffraction picture. In this way, we can study the structure of fractal patterns (and in specific, the structure of Julia sets) to give a rough estimate on the diffraction pattern of a certain structure. 
 
 A full investigation into this might be carried out in the future, however in order to do this some adjustments need to be made. In specific, this problem is SCREAMING quaternions from two different directions now: the stereopgraphic projection (which quaternions lend a nice hand in explaining the motion of such projections under rotation), and now in complex dyanimics. Some adjustments will have to be made to the code in order to get this up and running, but there isn't much avaible information online so it may be worth the time to look into. 
+
+![BesselDrivenHalley](https://github.com/michaelLukasik/NewtonBasins/blob/master/Examples/BesselDrivenPadeMethod.png)
