@@ -83,10 +83,10 @@ Now, instead, consider we create a function such that it evolves itself into the
 
 To illustrate this point, compare the two outputs shown below. The left image is the diffraction image for a small bundle of DNA angularly averaged over its major axis, and the image on the right is the Newton Method domain-shaded output given the equation $sin\(z) = 1$. Despite the $\{pi}/2$ rotation due to the diffraction, the patterns are strikingly similar. What we see is that the areas of constructive interference in the diffraction image correspond to the areas associated with the Julia Set on the Newton Method image! This should not be terribly supprising however if we consider the differences between the integer-binary-rigid arithmatic operations associated with prescribing one point with one (and only one) source, and our float-based quantum-dictated world.
 
-| Diffraction of DNA bundle (Rotated $90^{\circ}$ |  Domain Colored result from NM on $sin\(z) = 1$  | 
+| Diffraction of DNA bundle (Rotated $90^{\circ}$) |  Domain Colored result from NM on $sin\(z) = 1$  | 
 :--------------------:|:--------------------:|
 ![BDNADiffraction](https://github.com/michaelLukasik/EigenLaueDiffraction_Working/assets/138163589/1391f855-7b66-47b5-856e-d8f6787d147b)|![NM](https://github.com/michaelLukasik/EigenLaueDiffraction_Working/assets/138163589/50d5e91e-68aa-4323-8cf5-69d7b4a0a683)
-|
+
 
 The areas just to either edge of the Julia set desrcribe an area of instability between the influence of the roots. If one were to nudge the state in any small direction, the associated change of state could be massive when we are discussing points in this region. This highly chaotic behavior leads to the beautiful and never ending fractal patterns, but are smoothed over via quantum mechanics. In particular, the domain-shading procedure of Newton's Method describes a diffraction pattern in a world where instead of averaging via the rules of superposition, we instead take the maximum contribution at that location in space, and discard the rest of the contributions. 
 
